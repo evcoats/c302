@@ -24,7 +24,7 @@ def run_c302(
     simulator,
     save=False,
     show_plot_already=True,
-    data_reader="SpreadsheetDataReader",
+    data_reader=c302.DEFAULT_DATA_READER,
     verbose=False,
     plot_ca=True,
     plot_connectivity=False,
@@ -142,7 +142,7 @@ if __name__ == "__main__":
             0.05,
             "jNeuroML_NEURON",
             config_package="notebooks.configs.AVB",
-            data_reader="UpdatedSpreadsheetDataReader2",
+            data_reader=c302.FW_DATA_READER,
         )
 
     elif "-fw1" in sys.argv:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
             5000,
             0.005,
             "jNeuroML_NEURON",
-            data_reader="UpdatedSpreadsheetDataReader2",
+            data_reader=c302.FW_DATA_READER,
             save=True,
             show_plot_already=False,
         )
@@ -167,7 +167,7 @@ if __name__ == "__main__":
             5000,
             0.05,
             "jNeuroML_NEURON",
-            data_reader="UpdatedSpreadsheetDataReader2",
+            data_reader=c302.FW_DATA_READER,
             save=True,
             show_plot_already=True,
         )
@@ -265,6 +265,12 @@ if __name__ == "__main__":
     elif "-synsD1" in sys.argv:
         run_c302("Syns", "D1", "", 500, 0.05, "jNeuroML_NEURON")
 
+    elif "-synsW2D" in sys.argv:
+        run_c302("Syns", "W2D", "", 500, 0.05, "jNeuroML")
+
+    elif "-synsW2Dn" in sys.argv:
+        run_c302("Syns", "W2D", "", 500, 0.05, "jNeuroML_NEURON")
+
     elif "-socialA" in sys.argv:
         run_c302("Social", "A", "", 2500, 0.05, "jNeuroML_NEURON")
 
@@ -346,11 +352,17 @@ if __name__ == "__main__":
     elif "-iD1" in sys.argv:
         run_c302("IClamp", "D1", "", 6000, 0.05, "jNeuroML_NEURON", save=True)
 
+    elif "-iw2d" in sys.argv:
+        run_c302("IClamp", "W2D", "", 6000, 0.05, "jNeuroML", save=True)
+
+    elif "-iw2dn" in sys.argv:
+        run_c302("IClamp", "W2D", "", 6000, 0.05, "jNeuroML_NEURON", save=True)
+
     elif "-all" in sys.argv:
         print("Generating all plots")
         html = "<table>\n"
 
-        levels = ["A", "B", "C0", "C", "C1", "C2", "D", "D1"]
+        levels = ["A", "B", "C0", "C", "C1", "C2", "D", "D1", "W2D"]
         # levels = ['D','D1']
         # levels = ['C2']
         # levels = ['C0']
@@ -503,7 +515,7 @@ if __name__ == "__main__":
                     save=True,
                     show_plot_already=False,
                     plot_connectivity=True,
-                    data_reader="SpreadsheetDataReader",
+                    data_reader=c302.DEFAULT_DATA_READER,
                 )
 
                 html += "  </td>\n"
