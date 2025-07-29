@@ -158,7 +158,7 @@ cd ../..
 
 ## Try helper scripts
 
-python -m c302.runAndPlot -test
+python -m c302.runAndPlot -test # run: python -m c302.runAndPlot -all, to regenerate all images in examples/summary/images/
 
 python -m c302.c302_utils -nogui
 

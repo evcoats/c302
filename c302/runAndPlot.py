@@ -164,9 +164,22 @@ if __name__ == "__main__":
             "FW",
             "C2",
             "",
-            5000,
+            500,
             0.05,
             "jNeuroML_NEURON",
+            data_reader=c302.FW_DATA_READER,
+            save=True,
+            show_plot_already=True,
+        )
+
+    elif "-fwW2d" in sys.argv:
+        run_c302(
+            "FW",
+            "W2D",
+            "",
+            50,
+            0.05,
+            "jNeuroML",
             data_reader=c302.FW_DATA_READER,
             save=True,
             show_plot_already=True,
@@ -343,6 +356,8 @@ if __name__ == "__main__":
         run_c302("IClamp", "B", "", 6000, 0.05, "jNeuroML")
     elif "-iC0" in sys.argv:
         run_c302("IClamp", "C0", "", 6000, 0.05, "jNeuroML")
+    elif "-iC0n" in sys.argv:
+        run_c302("IClamp", "C0", "", 6000, 0.05, "jNeuroML_NEURON")
     elif "-iC" in sys.argv:
         run_c302("IClamp", "C", "", 6000, 0.05, "jNeuroML")
     elif "-iC1" in sys.argv:
