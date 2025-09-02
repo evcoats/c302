@@ -319,13 +319,38 @@ def get_next_stim_id(nml_doc, cell):
 
 def get_cell_position(cell):
     root_dir = os.path.dirname(os.path.abspath(__file__))
-    # cell_file_path = root_dir + "/../../../" if test else root_dir + "/../../"  # if running test
     cell_file_path = root_dir + "/"
     cell_file = cell_file_path + "NeuroML2/%s.cell.nml" % cell
     doc = loaders.NeuroMLLoader.load(cell_file)
-    location = doc.cells[0].morphology.segments[0].proximal
-    # print "%s, %s, %s" %(location.x, location.y, location.z)
-    return location
+    morph = doc.cells[0].morphology
+    segs = getattr(morph, "segments", None) or []
+    # Try soma segment/group heuristic first
+    soma_idx = None
+    for i, s in enumerate(segs):
+        sid = getattr(s, "id", None)
+        name = getattr(s, "name", "")
+        if (sid and str(sid).lower().startswith("soma")) or (isinstance(name, str) and "soma" in name.lower()):
+            soma_idx = i
+            break
+    if soma_idx is not None and getattr(segs[soma_idx], "proximal", None) is not None:
+        return segs[soma_idx].proximal
+    # Fallback: centroid of all available proximal/distal points
+    xs, ys, zs, n = 0.0, 0.0, 0.0, 0
+    for s in segs:
+        p = getattr(s, "proximal", None)
+        d = getattr(s, "distal", None)
+        if p is not None:
+            xs += float(p.x); ys += float(p.y); zs += float(getattr(p, "z", 0.0)); n += 1
+        if d is not None:
+            xs += float(d.x); ys += float(d.y); zs += float(getattr(d, "z", 0.0)); n += 1
+    if n > 0:
+        class _Loc(object):
+            pass
+        loc = _Loc()
+        loc.x = xs / n; loc.y = ys / n; loc.z = zs / n
+        return loc
+    # Final fallback to first segment proximal (legacy behavior)
+    return segs[0].proximal if segs and getattr(segs[0], "proximal", None) is not None else Location(0, 0, 0)
 
 
 def append_input_to_nml_input_list(stim, nml_doc, cell, params):
